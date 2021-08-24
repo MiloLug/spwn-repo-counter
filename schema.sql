@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS repo (
+    id integer NOT NULL PRIMARY KEY,
+    url VARCHAR(2176) UNIQUE NOT NULL
+);
+

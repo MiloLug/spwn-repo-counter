@@ -1,0 +1,19 @@
+{
+  "name": "repo-counter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "await-sleep": "0.0.1",
+    "body-parser": "^1.19.0",
+    "eris": "^0.15.1",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "pg": "^8.7.1"
+  }
+}
