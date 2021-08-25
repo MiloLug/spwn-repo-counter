@@ -8,7 +8,7 @@ module.exports = {
         
         for(let i = 0; i < repos.length; i++) {
             for(; (repo = repos[i]) && msg.description.length < 1900; i++) {
-                msg.description += `**[${repo.name}](${repo.url})** \n${repo.description}\n\n`;
+                msg.description += `**[${repo.name}](${repo.url})** \n${repo.description || '~ no description ~'}\n\n`;
             }
             msgs.push({
                 embed: msg
