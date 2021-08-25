@@ -19,7 +19,7 @@ module.exports = {
             (repo, i) => (i *= 4, `($${i+1}, $${i+2}, $${i+3}, $${i+4})`)
         ).join(',');
         const values = repos.reduce((acc, repo) => {
-            acc.push(repo.id, repo.url, repo.description || '', repo.name);
+            acc.push(repo.id, repo.url, repo.description, repo.name);
             return acc;
         }, []);
         
