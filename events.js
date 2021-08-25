@@ -12,23 +12,6 @@ module.exports = bot => {
         startLoop(updater, UPDATE_INTERVAL);
     });
 
-
-    bot.on('messageCreate', async (msg) => {
-          const botWasMentioned = msg.mentions.find(
-            mentionedUser => mentionedUser.id === bot.user.id,
-        );
-
-      if (botWasMentioned) {
-        try {
-          await msg.channel.createMessage('Present');
-        } catch (err) {
-          console.warn('Failed to respond to mention.');
-          console.warn(err);
-        }
-      }
-    });
-
-
     bot.on('guildCreate', async guild => {
         let msgs = utils.reposListMessages(await db.getAllRepos(), "Repositories:");
         if(!msgs.length)
