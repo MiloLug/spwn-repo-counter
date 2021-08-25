@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const sleep = require('await-sleep');
 const db = require('./db.js');
+const utils = require('./utils.js');
 
 const { GITHUB_TOKEN } = require('./config.json');
 
@@ -14,7 +15,7 @@ async function getAllFiles() {
     fullList = [];
     for(let p = 1, response = await getFilesPage(1); response.items.length; response = await getFilesPage(++p)) {
         fullList.push(...response.items);
-        await sleep(1000); // to avoid rate-limiting
+        await sleep(2000); // to avoid rate-limiting
     }
     return fullList;
 }
@@ -35,7 +36,7 @@ async function getRepos() {
 
 module.exports = bot => async () => {
     let repos = await getRepos();
-    const dbRepos = (await db.getAllRepos(['id'])).rows;
+    const dbRepos = await db.getAllRepos(['id']);
 
     for(const repo of dbRepos) {
         delete repos[repo.id];
@@ -52,31 +53,9 @@ module.exports = bot => async () => {
 
     await db.addRepos(repos);
 
-    let msgs = [];
-    let msg = {
-        title: "New repositories:",
-        description: ""
-    };
-    
-    for(let i = 0; i < repos.length; i++) {
-        for(; (repo = repos[i]) && msg.description.length < 1900; i++) {
-            msg.description += `**[${repo.name}](${repo.url})** \n${repo.description}\n\n`;
-        }
-        msgs.push({
-            embed: msg
-        });
-        msg = {description: ""};
-    }
-    msgs.push({
-        embed: {
-            title: `SPWN is now used in ${dbRepos.length + repos.length} repos!`
-        }
-    });
+    let msgs = utils.reposListMessages(repos, "New repositories:");
+    msgs.push(utils.reposCountMessage(dbRepos.length + repos.length));
 
-    bot.guilds.forEach(async guild => {
-        const channel = guild.channels.find(channel => channel.name === 'spwn-repos');
-        for(const msg of msgs)
-            await channel.createMessage(msg);
-    });
+    bot.guilds.forEach(guild => utils.sendToChannelName(guild, "spwn-repos", msgs));
 };
 

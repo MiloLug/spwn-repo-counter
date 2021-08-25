@@ -7,19 +7,23 @@ const { DATABASE } = require('./config.json');
 const pool = new Pool(DATABASE);
 
 module.exports = {
-    async getAllRepos(fields='*') {
-        return pool.query(`SELECT ${fields.join(', ')} FROM repo`);
+    async getAllRepos(fields=['*']) {
+        return (await pool.query(`SELECT ${fields.join(', ')} FROM repo`))?.rows || [];
     },
+    async getReposCount() {
+        return (await pool.query(`SELECT COUNT(id) as c FROM repo`)).rows[0]["c"] || 0;
+    },
+
     async addRepos(repos) {
         const matches = repos.map(
-            (repo, i) => (i *= 2, `($${i+1}, $${i+2})`)
+            (repo, i) => (i *= 4, `($${i+1}, $${i+2}, $${i+3}, $${i+4})`)
         ).join(',');
         const values = repos.reduce((acc, repo) => {
-            acc.push(repo.id, repo.url);
+            acc.push(repo.id, repo.url, repo.description, repo.name);
             return acc;
         }, []);
         
-        return pool.query(`INSERT INTO repo (id, url) VALUES ${matches}`, values);
+        return pool.query(`INSERT INTO repo (id, url, description, name) VALUES ${matches}`, values);
     }
 }
 
