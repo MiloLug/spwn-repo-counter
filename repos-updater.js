@@ -15,7 +15,7 @@ async function getAllFiles() {
     fullList = [];
     for(let p = 1, response = await getFilesPage(1); response.items.length; response = await getFilesPage(++p)) {
         fullList.push(...response.items);
-        await sleep(2000); // to avoid rate-limiting
+        await sleep(5000); // to avoid rate-limiting
     }
     return fullList;
 }
