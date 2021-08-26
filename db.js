@@ -10,8 +10,10 @@ module.exports = {
     async getAllRepos(fields=['*']) {
         return (await pool.query(`SELECT ${fields.join(', ')} FROM repo`))?.rows || [];
     },
-    async getReposCount() {
-        return (await pool.query(`SELECT COUNT(id) as c FROM repo`)).rows[0]["c"] || 0;
+    async getReposCount(filter="") {
+        return (await pool.query(
+            `SELECT COUNT(id) as c FROM repo ${filter ? 'WHERE ' + filter : ''}`
+        ))?.rows[0]["c"] || 0;
     },
 
     async addRepos(repos) {
