@@ -8,7 +8,6 @@ const bot = new eris.CommandClient(BOT_TOKEN, {}, {
 });
 
 require('./events.js')(bot);
-require('./commands.js')(bot);
 
 bot.connect();
 
