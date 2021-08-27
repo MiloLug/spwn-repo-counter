@@ -2,7 +2,7 @@ const eris = require('eris');
 const { BOT_TOKEN } = require('./config.json');
 
 const bot = new eris.CommandClient(BOT_TOKEN, {}, {
-    description: "The spwn repo counter bot",
+    description: "The spwn repo counter bot. Inspired by kahveciderin's bot",
     owner: "MiloLug / LiaVa",
     prefix: "@mention "
 });
