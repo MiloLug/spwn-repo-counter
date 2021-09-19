@@ -7,8 +7,14 @@ const { GITHUB_TOKEN } = require('./config.json');
 
 
 async function getFilesPage(page) {
-    queryString = `https://api.github.com/search/code?page=${page}&per_page=100&q=${encodeURIComponent('extension:spwn')}&access_token=${GITHUB_TOKEN}`;
-    return (await fetch(queryString)).json();
+    queryString = `https://api.github.com/search/code?page=${page}&per_page=100&q=${encodeURIComponent('extension:spwn')}`;
+    return (await fetch(
+        queryString, {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`
+            }
+        }
+    )).json();
 }
 
 async function getAllFiles() {
