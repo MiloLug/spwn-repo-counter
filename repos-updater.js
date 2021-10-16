@@ -7,7 +7,7 @@ const { GITHUB_TOKEN } = require('./config.json');
 
 
 async function getFilesPage(page) {
-    queryString = `https://api.github.com/search/code?page=${page}&per_page=100&q=${encodeURIComponent('extension:spwn')}`;
+    const queryString = `https://api.github.com/search/code?page=${page}&per_page=100&q=${encodeURIComponent('extension:spwn')}`;
     return (await fetch(
         queryString, {
             headers: {
@@ -17,31 +17,20 @@ async function getFilesPage(page) {
     )).json();
 }
 
-async function getAllFiles() {
-    fullList = [];
-    for(let p = 1, response = await getFilesPage(1); response.items.length; response = await getFilesPage(++p)) {
-        fullList.push(...response.items);
-        await sleep(5000); // to avoid rate-limiting
-    }
-    return fullList;
-}
-
-async function getRepos() {
-    const allFiles = await getAllFiles();
-    let repos = {};
-
-    for(const file of allFiles) {
-        if(!repos[file.repository.id]) {
-            repos[file.repository.id] = file.repository;
-        }
-    }
-
-    return repos;
-}
-
 
 module.exports = bot => async () => {
-    let repos = await getRepos();
+    // repos gethering
+    let repos = {};
+    
+    for(let p = 1, response = await getFilesPage(1); response.items.length; response = await getFilesPage(++p)) {
+        for(const file of response.items) {
+            if(!repos[file.repository.id]) {
+                repos[file.repository.id] = file.repository;
+            }
+        }
+        await sleep(5000); // to avoid rate-limiting
+    }
+
     const dbRepos = await db.getAllRepos(['id']);
 
     for(const repo of dbRepos) {
