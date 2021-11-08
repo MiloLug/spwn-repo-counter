@@ -23,7 +23,7 @@ module.exports = bot => async () => {
     let repos = {};
     
     // collect the repos
-    let plet p = 1;
+    let p = 1;
     while(true) {
         try{
             const response = await getFilesPage(p);
