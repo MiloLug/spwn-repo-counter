@@ -22,15 +22,25 @@ module.exports = bot => async () => {
     // repos gethering
     let repos = {};
     
-    for(let p = 1, response = await getFilesPage(1); response.items.length; response = await getFilesPage(++p)) {
-        for(const file of response.items) {
-            if(!repos[file.repository.id]) {
-                repos[file.repository.id] = file.repository;
+    // collect the repos
+    let plet p = 1;
+    while(true) {
+        try{
+            const response = await getFilesPage(p);
+            if(!response.items.length)
+                break;
+            
+            for(const file of response.items) {
+                if(!repos[file.repository.id]) {
+                    repos[file.repository.id] = file.repository;
+                }
             }
+            p++;
         }
+        catch(e){}
         await sleep(5000); // to avoid rate-limiting
     }
-
+    
     const dbRepos = await db.getAllRepos(['id']);
 
     for(const repo of dbRepos) {
