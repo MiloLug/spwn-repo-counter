@@ -48,7 +48,7 @@ module.exports = bot => async () => {
                 p,
                 'extension:spwn'
                 + ' size:' + (offset > 50 ? '>=500' : offset*10 + '..' + (offset+1)*10)
-                + 'sort:updated-' + ['asc', 'desc'][flip % 2]
+                + ' sort:updated-' + ['asc', 'desc'][flip % 2]
             );
             if(!response?.items?.length) {
                 emptyCount++;
